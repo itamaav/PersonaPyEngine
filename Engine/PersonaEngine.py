@@ -6,10 +6,15 @@ import imutils
 
 import os
 
+import sys
+sys.path.append('../')
+
 from Engine.State import State
 
 from Engine.Status import Status
 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 class PerosnaEngine:
 
@@ -433,7 +438,9 @@ class PerosnaEngine:
 
                     index += 1
 
-                    str_to_save_d = "../pictures/" + self.image_filename[:self.image_filename.find(".")] + "_" +str(index) + "_drawn.png"
+                    str_to_save_d = "../predict/" + self.image_filename[:self.image_filename.find(".")] + \
+                                    "/" + self.image_filename[:self.image_filename.find(".")] + "_" + \
+                                    str(index) + "_drawn.png"
 
                     cv2.imwrite(str_to_save_d, img_drawn)
 
@@ -449,7 +456,9 @@ class PerosnaEngine:
 
                     index += 1
 
-                    str_to_save_o = "../pictures/" + self.image_filename[:self.image_filename.find(".")] + "_" +str(index) + "_original.png"
+                    str_to_save_o = "../predict/" + self.image_filename[:self.image_filename.find(".")] + \
+                                    "/" + self.image_filename[:self.image_filename.find(".")] + "_" + \
+                                    str(index) + "_original.png"
 
                     cv2.imwrite(str_to_save_o, img_org)
 

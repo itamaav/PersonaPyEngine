@@ -1,8 +1,9 @@
-import ntpath
+import os
 
+
+import ntpath
 import cv2
 import keras
-
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
@@ -13,9 +14,7 @@ from keras.models import load_model
 import numpy as np
 from keras.preprocessing import image
 
-import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 
 class PersonaConNeuralNetwork:
 
