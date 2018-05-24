@@ -1,6 +1,6 @@
 import datetime
 import sys, getopt
-sys.path.append('../')
+sys.path.append('/home/personaitaben/PersonaPyEngine/')
 from Engine.PersonaEngine import PerosnaEngine
 from Engine.PersonaConNeuralNetwork import PersonaConNeuralNetwork
 from Engine.PictureHandler import PictureHandler
@@ -93,12 +93,12 @@ def main(argv):
     print()
     print("Current Time: ", datetime.datetime.now())
 
-    # path1 = "../ExamplesForAnalysis/example_1.jpg"
-    # path2 = "../ExamplesForAnalysis/example_2.jpeg"
-    # path3 = "../ExamplesForAnalysis/example_3.JPG"
-    # path4 = "../ExamplesForAnalysis/example_4.png"
-    # path5 = "../ExamplesForAnalysis/example_5.png"
-    # path6 = "../ExamplesForAnalysis/example_6.png"
+    # path1 = "/home/personaitaben/PersonaPyEngine/ExamplesForAnalysis/example_1.jpg"
+    # path2 = "/home/personaitaben/PersonaPyEngine/ExamplesForAnalysis/example_2.jpeg"
+    # path3 = "/home/personaitaben/PersonaPyEngine/ExamplesForAnalysis/example_3.JPG"
+    # path4 = "/home/personaitaben/PersonaPyEngine/ExamplesForAnalysis/example_4.png"
+    # path5 = "/home/personaitaben/PersonaPyEngine/ExamplesForAnalysis/example_5.png"
+    # path6 = "/home/personaitaben/PersonaPyEngine/ExamplesForAnalysis/example_6.png"
 
     engine_of_persona = PerosnaEngine("Full")
 
@@ -123,7 +123,7 @@ def main(argv):
     print("Current Time: ", datetime.datetime.now())
 
     persona_cnn = PersonaConNeuralNetwork("Full")
-    model_of_persona_cnn = persona_cnn.load_model_persona("../PersonaModels/persona_multi_classes_six_elements_epoch6.h5")
+    model_of_persona_cnn = persona_cnn.load_model_persona("/home/personaitaben/PersonaPyEngine/PersonaModels/persona_multi_classes_six_elements_epoch6.h5")
 
     """
     for file_image in files_to_classify_example_1:
@@ -145,7 +145,7 @@ def main(argv):
 
     training_data_gen, test_data_gen = persona_cnn_for_training.create_image_generators()
 
-    training_set,test_set = persona_cnn_for_training.create_image_datasets("../dataset_persona/training", "../dataset_persona/test")
+    training_set,test_set = persona_cnn_for_training.create_image_datasets("/home/personaitaben/PersonaPyEngine/dataset_persona/training", "/home/personaitaben/PersonaPyEngine/dataset_persona/test")
 
     persona_cnn_for_training.fit_model(2)  
     """

@@ -3,7 +3,7 @@ import cv2
 import webcolors as webcolors
 from sklearn.cluster import KMeans
 import sys
-sys.path.append('../')
+sys.path.append('/home/personaitaben/PersonaPyEngine/')
 
 
 class ColorsProcessor:

@@ -9,7 +9,7 @@ from Engine.ImageStorage import ImageDataSet
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import sys
-sys.path.append('../')
+sys.path.append('/home/personaitaben/PersonaPyEngine/')
 class PerosnaEngine:
     """"===================================================================================================
         ===================================================================================================
@@ -422,7 +422,7 @@ class PerosnaEngine:
                 for img_drawn in self.image_objects_list_drawn:
 
                     index += 1
-                    str_to_save_d = "../predict/" + self.image_filename[:self.image_filename.find(".")] + \
+                    str_to_save_d = "/home/personaitaben/PersonaPyEngine/predict/" + self.image_filename[:self.image_filename.find(".")] + \
                                     "/" + self.image_filename[:self.image_filename.find(".")] + "_" + \
                                     str(index) + "_drawn.png"
                     cv2.imwrite(str_to_save_d, img_drawn)
@@ -436,7 +436,7 @@ class PerosnaEngine:
                 for img_org in self.image_objects_list_original:
 
                     index += 1
-                    str_to_save_o = "../predict/" + self.image_filename[:self.image_filename.find(".")] + \
+                    str_to_save_o = "/home/personaitaben/PersonaPyEngine/predict/" + self.image_filename[:self.image_filename.find(".")] + \
                                     "/" + self.image_filename[:self.image_filename.find(".")] + "_" + \
                                     str(index) + "_original.png"
                     cv2.imwrite(str_to_save_o, img_org)

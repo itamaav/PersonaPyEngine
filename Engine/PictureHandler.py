@@ -34,14 +34,14 @@ class PictureHandler:
                 self.image_org_name = ntpath.basename(self.url)
 
             # Save the image downloaded by the name we get
-            urllib.request.urlretrieve(self.url, "../downloads/" + self.image_org_name)
+            urllib.request.urlretrieve(self.url, "/home/personaitaben/PersonaPyEngine/downloads/" + self.image_org_name)
 
             # Open the image from the directory after save
-            self.imgInstance = cv2.imread("../downloads/" + self.image_org_name)
+            self.imgInstance = cv2.imread("/home/personaitaben/PersonaPyEngine/downloads/" + self.image_org_name)
 
-            self.img_saved_path = "../downloads/" + self.image_org_name
+            self.img_saved_path = "/home/personaitaben/PersonaPyEngine/downloads/" + self.image_org_name
 
-            self.image_default_folder = "../predict/" + self.image_org_name[:self.image_org_name.find(".")]
+            self.image_default_folder = "/home/personaitaben/PersonaPyEngine/predict/" + self.image_org_name[:self.image_org_name.find(".")]
 
         except Exception as e:
             print("Error : wrong url or wrong input type !")
@@ -50,9 +50,9 @@ class PictureHandler:
 
         if directory != "":
             if directory.find(".") != -1:
-                self.image_default_folder = "../predict/" + directory[:directory.find(".")]
+                self.image_default_folder = "/home/personaitaben/PersonaPyEngine/predict/" + directory[:directory.find(".")]
             else:
-                self.image_default_folder = "../predict/" + directory
+                self.image_default_folder = "/home/personaitaben/PersonaPyEngine/predict/" + directory
 
         try:
             if not os.path.exists(self.image_default_folder):
