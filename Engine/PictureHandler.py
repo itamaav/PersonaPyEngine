@@ -16,7 +16,6 @@ class PictureHandler:
             * imgInstance - hold the image for all of the analysis process
             * image_org_name - extract the name file from he path and the parameters if exist
 
-
     """
 
     def __init__(self , url_to_image):

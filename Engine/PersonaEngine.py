@@ -1,23 +1,16 @@
 import ntpath
-
 import cv2
 import numpy as np
 import imutils
-
-import os
-
-import sys
-sys.path.append('../')
-
 from Engine.State import State
-
 from Engine.Status import Status
-
+from Engine.ImageStorage import ImageData
+from Engine.ImageStorage import ImageDataSet
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
+import sys
+sys.path.append('../')
 class PerosnaEngine:
-
     """"===================================================================================================
         ===================================================================================================
 
@@ -40,6 +33,8 @@ class PerosnaEngine:
 
         self.type = type
 
+        self.image_data_set = ImageDataSet()
+
 
 
 
@@ -48,13 +43,14 @@ class PerosnaEngine:
         self.image_path = image_path
         self.image_filename = ntpath.basename(image_path)
 
+        self.image_data_set.image_filename = self.image_filename
+
         print(" * Full Path -->  ", self.image_path)
         print(" * File Name -->  ", self.image_filename)
 
         if self.image_path:
 
             self.imageOriginal = cv2.imread(self.image_path)
-
             self.image = self.imageOriginal.copy()
 
             if self.image is not None:
@@ -62,36 +58,26 @@ class PerosnaEngine:
                 self.height, self.width, self.channels = self.image.shape
 
                 print(" * image read successfully")
-
                 print(" * Height = ", self.height, "Width = ", self.width, "Channels = ", self.channels)
 
                 self.currentStatus = Status()
-
                 self.image_objects_list_original = []
-
                 self.names_of_drawn_objects = []
-
                 self.image_objects_list_drawn = []
-
                 self.names_of_original_objects = []
 
         else:
 
             print("Error ---> Image not found ! ", end="\n\n")
 
-
-
-
-
         stateType = State()
-
         currentstate = stateType.resizeState
 
         while (currentstate != stateType.End):
 
             if (currentstate == stateType.resizeState):
 
-                print("\n","Current State : No." ,currentstate ," resizeState")
+                print("\n", "Current State : No.", currentstate, " resizeState")
 
                 if (self.resizeStateExec() == Status.SUCCESS):
                     currentstate = stateType.thresholdState
@@ -193,6 +179,8 @@ class PerosnaEngine:
 
             if self.height > 0 and self.width > 0 and self.channels > 0:
 
+                self.image_data_set.set_width_height(self.width, self.height)
+
                 return self.currentStatus.SUCCESS
 
             else:
@@ -201,7 +189,11 @@ class PerosnaEngine:
 
         else:
 
-            print("resizeStateExec - no need for resize process , move to next state .")
+            self.image_data_set.set_width_height(self.width, self.height)
+
+            print("resizeStateExec - No need for resize process , move to next state.")
+
+
 
             return self.currentStatus.SUCCESS
 
@@ -214,11 +206,8 @@ class PerosnaEngine:
         ret, self.image = cv2.threshold(self.image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
         if self.image is not None:
-
             return self.currentStatus.SUCCESS
-
         else:
-
             return self.currentStatus.FAILED
 
     def DilatationStateExec(self):
@@ -317,17 +306,17 @@ class PerosnaEngine:
                         x, y, w, h = cv2.boundingRect(c_inner)
 
                         print("Object found ( ", safe_counter, " ) ---> cX= ", cx, " | cY= ", cy)
-
                         print("Object Top-left coordinate: ( x=", x, "y=", y, " )")
-
                         print("Object Size : ( width= ", w, " height=", h, " )" , end="\n\n")
 
                         self.image_objects_list_drawn[i] = self.image_objects_list_drawn[i][y - 5:y + h + 5, x - 5:x + w + 5]
                         self.image_objects_list_drawn[i] = cv2.bitwise_not(self.image_objects_list_drawn[i])
 
                         obj_org = self.imageOriginal[y - 5:y + h + 5, x - 5:x + w + 5]
-
                         self.image_objects_list_original.append(obj_org)
+                        image_data_obj = ImageData()
+                        image_data_obj.calculate_precentage(w+5, h+5, self.imageOriginal.shape[1], self.imageOriginal.shape[0])
+                        self.image_data_set.append_to_image_data_list(image_data_obj)
 
                     if safe_counter > 20:
 
@@ -362,7 +351,6 @@ class PerosnaEngine:
                     padding_height_inner = diff
                     add_both = w * 0.2
                     padding_height_inner += add_both
-
                     padding_width, padding_height = int(add_both / 2), int(padding_height_inner / 2)
 
                 else:
@@ -372,7 +360,6 @@ class PerosnaEngine:
                     padding_width_inner = diff
                     add_both = h * 0.2
                     padding_width_inner += add_both
-
                     padding_width, padding_height = int(padding_width_inner / 2), int(add_both / 2)
 
                 self.image_objects_list_drawn[i] = cv2.copyMakeBorder(self.image_objects_list_drawn[i], padding_height,
@@ -398,7 +385,6 @@ class PerosnaEngine:
                     padding_height_inner = diff
                     add_both = w * 0.2
                     padding_height_inner += add_both
-
                     padding_width, padding_height = int(add_both / 2), int(padding_height_inner / 2)
 
                 else:
@@ -408,7 +394,6 @@ class PerosnaEngine:
                     padding_width_inner = diff
                     add_both = h * 0.2
                     padding_width_inner += add_both
-
                     padding_width, padding_height = int(padding_width_inner / 2), int(add_both / 2)
 
                 self.image_objects_list_original[i] = cv2.copyMakeBorder(self.image_objects_list_original[i], padding_height,
@@ -437,15 +422,11 @@ class PerosnaEngine:
                 for img_drawn in self.image_objects_list_drawn:
 
                     index += 1
-
                     str_to_save_d = "../predict/" + self.image_filename[:self.image_filename.find(".")] + \
                                     "/" + self.image_filename[:self.image_filename.find(".")] + "_" + \
                                     str(index) + "_drawn.png"
-
                     cv2.imwrite(str_to_save_d, img_drawn)
-
                     print("saving ---> ", str_to_save_d)
-
                     self.names_of_drawn_objects.append(str_to_save_d)
 
             index = 0
@@ -455,16 +436,24 @@ class PerosnaEngine:
                 for img_org in self.image_objects_list_original:
 
                     index += 1
-
                     str_to_save_o = "../predict/" + self.image_filename[:self.image_filename.find(".")] + \
                                     "/" + self.image_filename[:self.image_filename.find(".")] + "_" + \
                                     str(index) + "_original.png"
-
                     cv2.imwrite(str_to_save_o, img_org)
-
                     self.names_of_original_objects.append(str_to_save_o)
-
                     print("saving ---> ", str_to_save_o)
+
+            index = 0
+
+            if self.image_data_set:
+
+                for img_data in self.image_data_set.image_data_list:
+
+                    index += 1
+                    img_data.image_filename = self.image_filename[:self.image_filename.find(".")] + \
+                                             "_" + str(index) + ".png"
+                    img_data.image_info = "check - "+str(index)
+                    print("saving log ---> ", img_data.image_filename)
 
         return self.currentStatus.SUCCESS
 
