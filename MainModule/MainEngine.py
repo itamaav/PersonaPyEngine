@@ -5,6 +5,7 @@ from Engine.PersonaEngine import PerosnaEngine
 from Engine.PersonaConNeuralNetwork import PersonaConNeuralNetwork
 from Engine.PictureHandler import PictureHandler
 from Engine.ColorsEngine import ColorsProcessor
+import io
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 """"===================================================================================================
@@ -169,7 +170,13 @@ def main(argv):
         index += 1
 
     print("\n\n\n")
-    print(image_storage_instance.createAsJson())
+    # print(image_storage_instance.createAsJson())
+
+    with io.open('data.json', 'w', encoding='utf8') as outfile:
+
+        outfile.write(image_storage_instance.createAsJson())
+
+
 
 
 if __name__ == "__main__":
